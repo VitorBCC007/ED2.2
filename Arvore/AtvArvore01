@@ -1,0 +1,184 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
+import java.util.ArrayList;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    Node root;
+    ArrayList<Integer> valoresInseridos = new ArrayList<>();
+
+    public BinaryTree() {
+        root = null;
+    }
+
+    void inserir(int chave) {
+        valoresInseridos.add(chave);
+        root = inserirRec(root, chave);
+    }
+
+    Node inserirRec(Node root, int chave) {
+        if (root == null) {
+            root = new Node(chave);
+            return root;
+        }
+
+        if (chave < root.data)
+            root.left = inserirRec(root.left, chave);
+        else if (chave > root.data)
+            root.right = inserirRec(root.right, chave);
+
+        return root;
+    }
+
+    void imprimirPreOrdem(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            imprimirPreOrdem(node.left);
+            imprimirPreOrdem(node.right);
+        }
+    }
+
+    void imprimirEmOrdem(Node node) {
+        if (node != null) {
+            imprimirEmOrdem(node.left);
+            System.out.print(node.data + " ");
+            imprimirEmOrdem(node.right);
+        }
+    }
+
+    void imprimirPosOrdem(Node node) {
+        if (node != null) {
+            imprimirPosOrdem(node.left);
+            imprimirPosOrdem(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    void imprimirEmNivel() {
+        Queue<Node> fila = new LinkedList<>();
+        fila.add(root);
+
+        while (!fila.isEmpty()) {
+            Node noTemporario = fila.poll();
+            System.out.print(noTemporario.data + " ");
+
+            if (noTemporario.left != null)
+                fila.add(noTemporario.left);
+
+            if (noTemporario.right != null)
+                fila.add(noTemporario.right);
+        }
+    }
+
+    void removerElementosInseridos() {
+        for (int i = 0; i < 5 && !valoresInseridos.isEmpty(); i++) {
+
+            int valorRemover = valoresInseridos.remove(0);
+            System.out.println(" ");
+            System.out.println("Removendo elemento: " + valorRemover);
+            root = remover(root, valorRemover);
+        }
+    }
+
+    boolean buscar(Node root, int chave) {
+        if (root == null) {
+            return false;
+        }
+
+        if (root.data == chave) {
+            return true;
+        }
+
+        return buscar(root.left, chave) || buscar(root.right, chave);
+    }
+
+    Node remover(Node root, int chave) {
+        if (root == null)
+            return root;
+
+        if (chave < root.data)
+            root.left = remover(root.left, chave);
+        else if (chave > root.data)
+            root.right = remover(root.right, chave);
+        else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+            root.data = valorMinimo(root.right);
+
+            root.right = remover(root.right, root.data);
+        }
+
+        return root;
+    }
+
+    int valorMinimo(Node root) {
+        int valorMinimo = root.data;
+        while (root.left != null) {
+            valorMinimo = root.left.data;
+            root = root.left;
+        }
+        return valorMinimo;
+    }
+}
+
+public class AtividadeArvore {
+    public static void main(String[] args) {
+        BinaryTree arvore = new BinaryTree();
+        Random aleatorio = new Random();
+        for (int i = 0; i < 20; i++) {
+            int numeroAleatorio = aleatorio.nextInt(101);
+            System.out.println("Inserindo número: " + numeroAleatorio);
+            arvore.inserir(numeroAleatorio);
+        }
+
+//VALORES IMPRESSOS ANTES DA REMOÇÃO
+        System.out.print("Pré-ordem: ");
+        arvore.imprimirPreOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Em ordem: ");
+        arvore.imprimirEmOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Pós-ordem: ");
+        arvore.imprimirPosOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Em nível: ");
+        arvore.imprimirEmNivel();
+        System.out.println();
+
+        // REMOVENDO 5 ELEMENTOS 
+        arvore.removerElementosInseridos();
+
+System.out.println();
+//VALORES IMPRESSOS DEPOIS DA REMOÇÃO 
+        System.out.println("---------------------------------------------------");
+        System.out.println("*************APÓS REMOVER 5 ELEMENTOS*************");
+        System.out.println("---------------------------------------------------");
+
+System.out.println();
+
+        System.out.print("Pré ordem: ");
+        arvore.imprimirPreOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Em ordem: ");
+        arvore.imprimirEmOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Pós-ordem: ");
+        arvore.imprimirPosOrdem(arvore.root);
+        System.out.println();
+        System.out.print("Em nível: ");
+        arvore.imprimirEmNivel();
+    }
+}
