@@ -1,0 +1,134 @@
+import java.util.Random;
+
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    Node root;
+
+    BinaryTree() {
+        root = null;
+    }
+
+    void insert(int data) {
+        root = insertRec(root, data);
+    }
+
+    Node insertRec(Node root, int data) {
+        if (root == null) {
+            root = new Node(data);
+            return root;
+        }
+
+        if (data < root.data)
+            root.left = insertRec(root.left, data);
+        else if (data > root.data)
+            root.right = insertRec(root.right, data);
+
+        return root;
+    }
+
+    void inOrder(Node root) {
+        if (root != null) {
+            inOrder(root.left);
+            System.out.print(root.data + " ");
+            inOrder(root.right);
+        }
+    }
+
+    void DSWBalance() {
+        if (root == null) return;
+
+        makeBackbone();
+
+        int n = countNodes(root);
+        int m = (int) (Math.log(n + 1) / Math.log(2)) - 1;
+        makeBalanced(m);
+    }
+
+    int countNodes(Node root) {
+        if (root == null) return 0;
+        return 1 + countNodes(root.left) + countNodes(root.right);
+    }
+
+    void makeBackbone() {
+        Node curr = root;
+        Node prev = null;
+
+        while (curr != null) {
+            if (curr.left != null) {
+                Node temp = curr.left;
+                curr.left = temp.right;
+                temp.right = curr;
+                curr = temp;
+                if (prev != null) {
+                    prev.right = curr;
+                } else {
+                    root = curr;
+                }
+            } else {
+                prev = curr;
+                curr = curr.right;
+            }
+        }
+    }
+
+    void makeBalanced(int rotations) {
+        Node curr = root;
+
+        for (int i = 0; i < rotations; i++) {
+            Node temp = curr;
+            curr = curr.right;
+            temp.right = curr.right;
+            curr.right = temp;
+
+            curr = temp.right;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        BinaryTree tree = new BinaryTree();
+        Random random = new Random();
+        int[] numbersToAdd = new int[20]; 
+
+        // Adiciona 100 números aleatórios à árvore
+        for (int i = 0; i < 100; i++) {
+            int randomNumber = random.nextInt(101); 
+            tree.insert(randomNumber);
+        }
+        System.out.println();
+        System.out.println("Árvore original:");
+        tree.inOrder(tree.root);
+        System.out.println();
+
+        // Adiciona 20 números à árvore e armazena-os no vetor
+        for (int i = 0; i < 20; i++) {
+            int randomNumber = random.nextInt(101); 
+            numbersToAdd[i] = randomNumber;
+            tree.insert(randomNumber);
+        }
+        System.out.println();
+        System.out.println("20 números a serem adicionados e balanceados:");
+        for (int number : numbersToAdd) {
+            System.out.print(number + " ");
+        }
+        System.out.println();
+
+        // Balanceia a árvore após adicionar os 20 números
+        tree.DSWBalance();
+
+        System.out.println();
+        System.out.println("Árvore balanceada após adicionar os 20 números:");
+        tree.inOrder(tree.root);
+        System.out.println();
+    }
+}
