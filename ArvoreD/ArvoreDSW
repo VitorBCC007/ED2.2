@@ -100,7 +100,6 @@ public class Main {
         Random random = new Random();
         int[] numbersToAdd = new int[20]; 
 
-        // Adiciona 100 números aleatórios à árvore
         for (int i = 0; i < 100; i++) {
             int randomNumber = random.nextInt(101); 
             tree.insert(randomNumber);
@@ -110,7 +109,6 @@ public class Main {
         tree.inOrder(tree.root);
         System.out.println();
 
-        // Adiciona 20 números à árvore e armazena-os no vetor
         for (int i = 0; i < 20; i++) {
             int randomNumber = random.nextInt(101); 
             numbersToAdd[i] = randomNumber;
@@ -123,9 +121,9 @@ public class Main {
         }
         System.out.println();
 
-        // Balanceia a árvore após adicionar os 20 números
+        //BALANCEANDO ÁRVORE + 20 NÚMEROS
         tree.DSWBalance();
-
+//--------------------------------------------------------------------------------------------------//
         System.out.println();
         System.out.println("Árvore balanceada após adicionar os 20 números:");
         tree.inOrder(tree.root);
