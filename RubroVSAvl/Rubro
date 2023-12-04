@@ -1,0 +1,110 @@
+import java.util.*;
+import java.io.*;
+
+class RedBlackNode {
+    int key;
+    boolean isRed;
+    RedBlackNode left, right;
+
+    RedBlackNode(int key) {
+        this.key = key;
+        this.isRed = true;
+        this.left = this.right = null;
+    }
+}
+
+class RedBlackTree {
+    RedBlackNode root;
+
+    RedBlackNode insert(RedBlackNode node, int key) {
+        if (node == null)
+            return new RedBlackNode(key);
+
+        if (key < node.key)
+            node.left = insert(node.left, key);
+        else if (key > node.key)
+            node.right = insert(node.right, key);
+        else
+            return node;
+
+        return node;
+    }
+
+    void inOrder(RedBlackNode node) {
+        if (node != null) {
+            inOrder(node.left);
+            System.out.print(node.key + " ");
+            inOrder(node.right);
+        }
+    }
+
+    int countOccurrences(RedBlackNode node, int key) {
+        int count = 0;
+        while (node != null) {
+            if (node.key == key) {
+                count++;
+                node = node.right;
+            } else if (key < node.key)
+                node = node.left;
+            else
+                node = node.right;
+        }
+        return count;
+    }
+}
+
+public class Rubro {
+    public static void main(String[] args) {
+        RedBlackTree rbTree = new RedBlackTree();
+        List<Integer> dataList = new ArrayList<>();
+
+        try {
+            File file = new File("dados100_mil.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().replaceAll("[,\\[\\]-]", "").trim();
+                String[] numbers = line.split(" ");
+
+                for (String num : numbers) {
+                    int key = Integer.parseInt(num);
+                    rbTree.root = rbTree.insert(rbTree.root, key);
+                    dataList.add(key);
+                }
+            }
+            scanner.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo: " + e);
+        }
+
+        long startTimeRB = System.currentTimeMillis();
+        rbTree.inOrder(rbTree.root);
+
+        Random random = new Random();
+        for (int i = 0; i < 50000; i++) {
+            int randNum = random.nextInt(19999) - 9999;
+            if (randNum % 3 == 0)
+                rbTree.root = rbTree.insert(rbTree.root, randNum);
+            else {
+                int count = rbTree.countOccurrences(rbTree.root, randNum);
+                System.out.println("O número " + randNum + " aparece " + count + " vezes na árvore.");
+            }
+        }
+
+        long endTimeRB = System.currentTimeMillis();
+        long executionTimeRB = endTimeRB - startTimeRB;
+        System.out.println("\nTempo de execução da Árvore Rubro-Negra após operações: " + formatTime(executionTimeRB));
+    }
+
+    static String formatTime(long timeInSeconds) {
+        int hours = (int) (timeInSeconds / 3600000);
+        int minutes = (int) ((timeInSeconds % 3600000) / 60000);
+        int seconds = (int) ((timeInSeconds % 60000) / 1000);
+        int milliseconds = (int) (timeInSeconds % 1000);
+
+        return String.format("%02d:%02d:%02d:%03d", hours, minutes, seconds, milliseconds);
+    }
+}
+
+//Tempo de execução da Árvore Rubro-Negra após operações: 00:00:03:535
+//Tempo de execução da Árvore Rubro-Negra após operações: 00:00:03:462
+//Tempo de execução da Árvore Rubro-Negra após operações: 00:00:03:441
