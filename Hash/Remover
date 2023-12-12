@@ -1,0 +1,34 @@
+class Cache:
+    def __init__(self, capacidade_maxima):
+        self.capacidade = capacidade_maxima
+        self.cache = {}
+        self.ordem_acesso = []
+
+    def obter_dado(self, chave):
+        if chave in self.cache:
+            self.ordem_acesso.remove(chave)
+            self.ordem_acesso.append(chave)
+            return self.cache[chave]
+        else:
+            return None  
+
+    def adicionar_dado(self, chave, valor):
+        if chave in self.cache:
+            self.cache[chave] = valor
+            self.ordem_acesso.remove(chave)
+            self.ordem_acesso.append(chave)
+        else:
+            if len(self.cache) >= self.capacidade:
+                chave_removida = self.ordem_acesso.pop(0)
+                del self.cache[chave_removida]
+            self.cache[chave] = valor
+            self.ordem_acesso.append(chave)
+
+cache_config = Cache(3)  
+cache_config.adicionar_dado('chave1', 'valor1')
+cache_config.adicionar_dado('chave2', 'valor2')
+cache_config.adicionar_dado('chave3', 'valor3')
+
+print(cache_config.obter_dado('chave1'))  
+cache_config.adicionar_dado('chave4', 'valor4')
+print(cache_config.obter_dado('chave2'))  
