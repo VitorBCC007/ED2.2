@@ -1,0 +1,25 @@
+class Biblioteca:
+    def __init__(self):
+        self.indice_livros = {}
+
+    def adicionar_livro(self, titulo, autor):
+        codigo_livro = hash(titulo)
+        
+        self.indice_livros[codigo_livro] = {'titulo': titulo, 'autor': autor}
+
+    def buscar_livro(self, titulo):
+        codigo_livro = hash(titulo)
+        
+        if codigo_livro in self.indice_livros:
+            return self.indice_livros[codigo_livro]
+        else:
+            return None
+
+biblioteca = Biblioteca()
+biblioteca.adicionar_livro('God Zilla', 'Ishiro Honda')
+biblioteca.adicionar_livro('Kid Bengala e a Bengala', 'Kid Bengala')
+biblioteca.adicionar_livro('Aventuras de Alice no País das Maravilhas', 'Lewis Carroll')
+biblioteca.adicionar_livro('O Senhor dos Anéis', 'J.R.R. Tolkien')
+biblioteca.adicionar_livro('God Zilla', 'Ishiro Honda')
+livro_encontrado = biblioteca.buscar_livro('God Zilla')
+print(livro_encontrado)  
