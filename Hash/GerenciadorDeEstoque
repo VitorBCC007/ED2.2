@@ -1,0 +1,38 @@
+class Produto:
+    def __init__(self, nome, preco, quantidade):
+        self.nome = nome
+        self.preco = preco
+        self.quantidade = quantidade
+class GerenciadorEstoque:
+    def __init__(self):
+        self.produtos = {}
+    def adicionar_produto(self, codigo, nome, preco, quantidade):
+        if codigo not in self.produtos:
+            novo_produto = Produto(nome, preco, quantidade)
+            self.produtos[codigo] = novo_produto
+        else:
+            print("Produto já existe no estoque!")
+    def remover_produto(self, codigo):
+        if codigo in self.produtos:
+            del self.produtos[codigo]
+        else:
+            print("Produto não encontrado!")
+    def atualizar_quantidade(self, codigo, nova_quantidade):
+        if codigo in self.produtos:
+            self.produtos[codigo].quantidade = nova_quantidade
+        else:
+            print("Produto não encontrado!")
+    def listar_produtos(self):
+        print("Produtos no estoque:")
+        for codigo, produto in self.produtos.items():
+            print(f"Código: {codigo}, Nome: {produto.nome}, Preço: {produto.preco}, Quantidade: {produto.quantidade}")
+
+estoque = GerenciadorEstoque()
+estoque.adicionar_produto(101, "Camisa", 29.99, 50)
+estoque.adicionar_produto(102, "Calça Jeans", 49.99, 30)
+estoque.adicionar_produto(103, "Tênis", 79.99, 20)
+
+estoque.listar_produtos()
+estoque.atualizar_quantidade(101, 40)
+estoque.remover_produto(102)
+estoque.listar_produtos()
