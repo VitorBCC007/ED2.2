@@ -1,0 +1,15 @@
+from collections import defaultdict
+
+def contar_palavras(texto):
+    contagem_palavras = defaultdict(int)
+    palavras = texto.lower().split()
+    for palavra in palavras:
+        contagem_palavras[palavra] += 1
+
+    return contagem_palavras
+
+texto_exemplo = "Este é um exemplo de texto. Este texto é utilizado para demonstração."
+resultado_contagem = contar_palavras(texto_exemplo)
+
+for palavra, contagem in resultado_contagem.items():
+    print(f"A palavra '{palavra}' aparece {contagem} vez(es).")
